@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Jonotarbazar Login</title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="" />
+        <meta property="og:type" content="" />
+        <meta property="og:url" content="" />
+        <meta property="og:image" content="" />
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="./assets/imgs/theme/favicon.svg" />
+        <!-- Template CSS -->
+       <script src="./assets/js/vendors/color-modes.js"></script>
+        <link href="./assets/css/main.css?v=6.0" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="./assets/css/style.css">
+        
+    </head>
+
+    <body>
+        
+        <!-- The actual snackbar -->
+       
+        <main>
+            <header class="main-header style-2 navbar">
+                <div class="col-brand">
+                   
+                        <img src="./assets/imgs/theme/jb.png" class="logo" height="60px;" width="100%" alt="BDS" />
+                    
+                </div>
+                <div class="col-nav">
+                    <ul class="nav">
+                       
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                        </li>
+                       
+                       
+                    </ul>
+                </div>
+            </header>
+            <section class="content-main mt-80 mb-80">
+               
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    
+                        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="display: none; background-color: black; color: beige;">
+                            <div class="toast-header" style="background-color: black; color: beige;">
+                                <strong class="me-auto">Notification</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                
+                            </div>
+                        </div>
+                      
+                  </div>
+                
+                
+                <div class="card mx-auto card-login">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">Jonotarbazar POS | Login</h2>
+                        
+                        <form id="login-form">
+                            <div class="input-group mb-3 rounded" style="border:1px solid rgba(132, 131, 131, 0.885)">
+                                <span class="btn btn-ghost">🇧🇩 +88</span>
+                                <input type="tel" name="phone" class="form-control" pattern="^(?:\+?88)?01[13-9]\d{8}$" 
+                                       placeholder="01XX XXX XXXX" id="phone">
+                            </div>
+                            <div class="mb-4">
+                                <button type="submit" class="btn btn-primary w-85" id="login-btn" disabled>Login</button>
+                            </div>
+                        </form>
+                       
+                        
+                    </div>
+                </div>
+            </section>
+            <footer class="main-footer text-center">
+                <p class="font-xs">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+                    &copy; BDS - <small>Breakdown Syndicate</small> .
+                </p>
+                <p class="font-xs mb-30">All rights reserved</p>
+            </footer>
+        </main>
+        <script src="./assets/js/vendors/jquery-3.6.0.min.js"></script>
+        
+
+        <script src="./assets/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="./assets/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="./assets/js/main.js?v=6.0" type="text/javascript"></script>
+
+        
+
+
+
+    
+<!--       
+     <script>
+        document.getElementById('login-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const phoneInput = document.getElementById('phone');
+            const phone = phoneInput.value;
+            const loginButton = event.target.querySelector('button[type="submit"]');
+            const toastElement = document.getElementById('liveToast');
+            const toastHeader = toastElement.querySelector('.toast-header');
+            const toastBody = toastElement.querySelector('.toast-body');
+            const toast = new bootstrap.Toast(toastElement, { autohide: true });
+
+            // Hide the toast initially
+            toastElement.style.display = 'none';
+
+            // Add loading state to the button
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+            
+            try {
+                
+                const response = await fetch('https://admin.jonotarbazar.today/api/v1/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone }),
+                });
+
+                const data = await response.json();
+
+               // console.log(data);
+
+                if (response.success == true) {
+                    // Redirect to the OTP page
+                   
+                   window.electronAPI.setStoreValue('otp', data.data.otp);
+                   // window.location.href = 'index.html';
+                   win.loadFile('index.html')
+                } else {
+                    // Reset button state
+                    loginButton.disabled = false;
+                    loginButton.innerHTML = 'Login';
+
+                    // Update toast with error message
+                    toastBody.textContent = data.message;
+                    toastHeader.textContent = "Notification";
+
+                    // Show the toast
+                    toastElement.style.display = 'block'; // Make it visible
+                    toast.show();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+
+                // Reset button state
+                loginButton.disabled = false;
+                loginButton.innerHTML = 'Login';
+
+                // Update toast with server error message
+                toastBody.textContent = 'Something went wrong. Please try again later.';
+
+                // Show the toast
+                toastElement.style.display = 'block'; // Make it visible
+                toast.show();
+            }
+        });
+
+    </script> -->
+
+    <!--login operation script-->
+        <script src="./login.js"></script>
+
+    <!--ipc render script-->
+    <!-- <script>
+        const { ipcRenderer } = require('electron');
+        let store;
+
+        async function initializeStore() {
+            const Store = (await import('electron-store')).default;
+            store = new Store();
+            
+            // // Display user info
+            // const user = store.get('user');
+            // if (user) {
+            //     document.getElementById('user-info').innerHTML = `
+            //         <h3>Hello, ${user.username}!</h3>
+            //     `;
+            // }
+        }
+
+        // Initialize when page loads
+        initializeStore();
+
+        function logout() {
+            ipcRenderer.send('logout');
+        }
+    </script>     -->
+
+
+    </body>
+</html>
