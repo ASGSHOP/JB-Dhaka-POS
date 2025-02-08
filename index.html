@@ -1,121 +1,411 @@
-<!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
-    <title>POS System</title>
+    <meta charset="utf-8" />
+    <title>Jonotarbazar Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/jb.png" />
+    <!-- Template CSS -->
+    <script src="./assets/js/vendors/color-modes.js"></script>
+    <link href="./assets/css/main.css?v=6.0" rel="stylesheet" type="text/css" />
+    <script src="./assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+   
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
+        /* Define the shaking animation */
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
         }
-        .pos-container {
-            display: grid;
-            grid-template-columns: 3fr 2fr;
-            gap: 20px;
-            height: calc(100vh - 40px);
-        }
-        .products-section {
-            background: #f5f5f5;
-            border-radius: 8px;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .cart-section {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-        }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-        .product-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            cursor: pointer;
-            text-align: center;
-        }
-        .product-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        .cart-items {
-            flex-grow: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .cart-totals {
-            border-top: 2px solid #eee;
-            padding-top: 20px;
-        }
-        .payment-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .payment-btn {
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .payment-btn.cash { background-color: #4CAF50; }
-        .payment-btn.card { background-color: #2196F3; }
-        .category-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            gap: 10px;
-        }
-        .category-tab {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            background: #ddd;
-            cursor: pointer;
-        }
-        .category-tab.active {
-            background: #4CAF50;
-            color: white;
+
+        /* Add a class for the shake effect */
+        .shake {
+            animation: shake 0.5s ease;
+            /* Shake for 0.5 seconds */
         }
     </style>
+
 </head>
+
 <body>
-    <div class="pos-container">
-        <div class="products-section">
-            <div class="category-tabs" id="category-tabs"></div>
-            <div class="product-grid" id="product-grid"></div>
+
+
+
+
+    <header class="main-header navbar justify-content-between">
+        <div class="col-search">
+           
+                <img src="./assets/imgs/theme/jb.png" class="logo" height="60px;" width="auto;" alt="BDS" />
+            
         </div>
-        <div class="cart-section">
-            <h2>Current Order</h2>
-            <div class="cart-items" id="cart-items"></div>
-            <div class="cart-totals">
-                <div class="subtotal">Subtotal: $<span id="subtotal">0.00</span></div>
-                <div class="tax">Tax (10%): $<span id="tax">0.00</span></div>
-                <div class="total">Total: $<span id="total">0.00</span></div>
+        <div class="col-search">
+            <h2>Jonotarbazar POS</h2>
+        </div>
+        <div class="col-nav">
+            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i
+                    class="material-icons md-apps"></i></button>
+            <ul class="nav">
+                <!--
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon" href="#">
+                                <i class="material-icons md-notifications animation-shake"></i>
+                                <span class="badge rounded-pill">3</span>
+                            </a>
+                        </li>
+                        -->
+
+                <li class="nav-item">
+                    <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                </li>
+
+                <li class="dropdown nav-item">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                        aria-expanded="false"> <img class="img-xs rounded-circle"
+                            src="./assets/imgs/people/avatar-1.png" alt="User" /></a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                        <a class="dropdown-item" href="/admin/settings/showAll"><i
+                                class="material-icons md-perm_identity"></i>Edit Profile</a>
+
+
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item text-danger" onclick="window.electronAPI.navigate('login.html')"><i
+                                class="material-icons md-exit_to_app"></i>Logout</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+
+            <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true"
+                style="display: none; background-color: black; color: beige;">
+                <div class="toast-header" style="background-color: black; color: beige;">
+                    <strong class="me-auto">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+
+                </div>
             </div>
-            <div class="payment-buttons">
-                <button class="payment-btn cash" onclick="processSale('cash')">Cash Payment</button>
-                <button class="payment-btn card" onclick="processSale('card')">Card Payment</button>
+
+        </div>
+        <div class="row py-2">
+            <div class="col-md-8 text-center">
+                <!--products card-->
+                <div class="card" style="height: 700px;">
+                    <div class="card-header d-flex justify-content-between">
+
+
+
+                        <!-- <input type="text" class="form-control border-2 w-25" placeholder="Enter to search..."
+                            style="border-color: grey"> -->
+
+
+                        <span style="color: red;">সর্বোচ্চ অর্ডার লিমিট ৩ কেজি</span>
+
+                    </div>
+                    <div class="card-body" style="max-height: 700px; overflow-y: auto;">
+                        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-4 g-4" id="product-display">
+
+                            <!--
+                            
+                                                       <div class="col">
+                                <div class="card" pid="2" style="cursor: pointer;">
+                                    <img src="https://placehold.co/150" class="card-img-top" alt="Product 2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product 2</h5>
+                                        <p class="card-text">$30.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card" pid="3" style="cursor: pointer;">
+                                    <img src="https://placehold.co/150" class="card-img-top" alt="Product 3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product 3</h5>
+                                        <p class="card-text">$20.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card" pid="4" style="cursor: pointer;">
+                                    <img src="https://placehold.co/150" class="card-img-top" alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product 4</h5>
+                                        <p class="card-text">$15.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card" pid="5" style="cursor: pointer;">
+                                    <img src="https://placehold.co/150" class="card-img-top" alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product 4</h5>
+                                        <p class="card-text">$15.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card" pid="6" style="cursor: pointer;">
+                                    <img src="https://placehold.co/150" class="card-img-top" alt="Product 4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Product 4</h5>
+                                        <p class="card-text">$15.00</p>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                           -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--limon saheb do-->
+            <div class="col-md-4 col-sm-12">
+                <div class="container">
+                    <!--checkout card-->
+                    <div class="card" style="height: 700px;"> <!-- Adjust height to auto for flexibility -->
+                        <div class="card-header text-center">
+                            <h4>চেকআউট</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-group d-flex my-2">
+
+                                <input type="text" id="cus_num" class="form-control rounded"
+                                    placeholder="* কাস্টমারের ফোন নাম্বার দিন...01XX XXX XXXX"
+                                    aria-label="Search field">
+                                <!-- <button class="btn btn-primary mx-auto" id="searchBttn" type="button"><i
+                                        class="material-icons md-search"></i></button> -->
+
+                                <input type="hidden" id="bazarId" value="">
+                            </div>
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;"> </th>
+                                        <th>Name</th>
+                                        <th class="text-center">QTY</th>
+                                        <th class="text-end">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-list">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-2">
+
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span>সাব টোটাল </span>
+                                        <span id="sub-total"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="d-flex justify-content-end">
+                                <!-- <button id="modal-show" class="btn btn-success btn-sm">show QR</button> -->
+                                <strong class="mx-5">টোটাল </strong>
+                                <strong class="text-success" id="total-price"></strong>
+                            </div>
+                            <!--pay btn-->
+                            <div class="card my-4 ">
+                                <button class="btn btn-success d-flex justify-content-center" id="paymentBtn">পরিশোধ
+                                    করুন </button>
+                                <!-- <span id="payValue"></span> -->
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+   
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">অর্ডার করার জন্য ধন্যবাদ। পেমেন্ট গ্রহণ করার
+                        জন্য প্রস্তুত </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Initially, show the payment image (money.gif) -->
+                    <img src="./assets/imgs/money.gif" id="paymentImage" alt="Payment processing" />
+
+                    <div id="qrCodePreview" style="display: none; text-align: center;">
+                        <img id="qrCodeImage" src="" alt="QR Code Preview" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বন্ধ করুন </button>
+                    <button type="button" class="btn btn-primary" id="acceptPaymentBtn">পেমেন্ট গ্রহণ করুন </button>
+                </div>
             </div>
         </div>
     </div>
-    <script src="renderer.js"></script>
+
+
+
+
+
+
+
+
+    
+
+    <!--modal view with price-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const paymentBtn = document.getElementById("paymentBtn");
+            const totalPriceElement = document.getElementById("total-price"); // Total price in checkout
+            const payValueElement = document.getElementById("payValue"); // Pay button text
+            const modalBody = document.querySelector("#staticBackdrop .modal-body");
+
+            // Update the modal with the total price when "Pay" button is clicked
+            paymentBtn.addEventListener("click", () => {
+                const totalPrice = totalPriceElement.textContent || "৳0.00"; // Get the total price
+                modalBody.innerHTML = `<h3 class="text-center text-success py-2">মূল্য গ্রহণ করুন : ${totalPrice} টাকা।</h3><img src="/assets/imgs/money.gif"/>`;
+            });
+        });
+
+    </script>
+
+  
+
+    <!--phone number validation-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.getElementById("cus_num");
+            const pay = document.getElementById("paymentBtn");
+
+            // Function to validate phone number
+            function validatePhoneNumber(phone) {
+                const phonePattern = /^(?:\+?88)?01[13-9]\d{8}$/;
+                return phonePattern.test(phone);
+            }
+
+            // Add event listener to the phone input
+            phoneInput.addEventListener("input", function () {
+                // Enable button only if the phone number is valid
+                if (validatePhoneNumber(phoneInput.value)) {
+                    pay.disabled = false; // Enable button
+                } else {
+                    pay.disabled = true; // Disable button
+                }
+            });
+
+
+        });
+    </script>
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+                &copy; BDS <small>Breakdown Syndicate</small> .
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end">All rights reserved</div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <!-- <script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            scrollX: true,
+            "order": [["createdAt", "desc"]], // The first column (index 0) sorted in descending order
+            "paging": true,        // Enable paging (optional)
+            "searching": true,     // Enable search (optional)
+            "info": true,          // Enable table info (optional)
+        });
+    });
+</script> -->
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script src="./assets/js/vendors/bootstrap.bundle.min.js"></script>
+    
+    <script src="./assets/js/vendors/select2.min.js"></script>
+    <script src="./assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="./assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script>
+        $(function () {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+        });
+    </script>
+
+    <script src="./assets/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="./assets/js/main.js?v=6.0" type="text/javascript"></script>
+    <script src="./assets/js/custom-chart.js" type="text/javascript"></script>
 </body>
+
 </html>
